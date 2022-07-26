@@ -170,20 +170,24 @@ def select_intervals_by_chr_name(intervals, chr_name):
 
 
 def merge_nondisjoint_intervals(intervals):
-    if len(intervals) == 0:
-        return []
-
-    output = []
-    open_int = intervals[0]
-    for c, b, e in itertools.chain(intervals[1:], [(None, None, None)]):
-        if open_int[0] != c or open_int[2] < b:
-            # we can close the opened interval
-            output.append(open_int)
-            open_int = c, b, e
-        else:
-            # current interval overlaps with the opened, merge
-            open_int = c, open_int[1], e
-    return output
+    intervals = filter(lambda interval: interval[1] < interval[2], intervals)
+    intervals = sorted(intervals)
+    if len(intervals) < 2:
+        return intervals
+    result = []
+    c, b, e = intervals[0]
+    for c2, b2, e2 in intervals[1:]:
+        if c2 != c:
+            result.append((c, b, e))
+            c, b, e = c2, b2, e2
+            continue
+        if e < b2:
+            result.append((c, b, e))
+            c, b, e = c2, b2, e2
+            continue
+        e = max(e, e2)
+    result.append((c, b, e))
+    return result
 
 
 def filter_intervals_by_chr_name(intervals, chr_names):
