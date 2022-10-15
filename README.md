@@ -1,5 +1,7 @@
 # MCDP
 
+**IMPORTANT!** *The newer version of this tool is available [here](https://github.com/fmfi-compbio/mcdp2). The newer version is faster and provides additional features, such as number of shared bases test statistic, masking and context-aware modelling.*
+
 ## Installation
 
 ```shell
